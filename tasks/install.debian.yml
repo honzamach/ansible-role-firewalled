@@ -1,0 +1,6 @@
+---
+
+- name: Installing essential packages
+  apt:
+    name: ufw
+    state: latest

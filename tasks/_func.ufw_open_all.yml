@@ -1,0 +1,15 @@
+---
+
+- debug:
+    msg: "{{ ri_label }} - Opening all ports for IP {{ item }}"
+  with_items:
+    - "{{ ri_ufw_open_ips }}"
+  tags:
+    - debug
+
+- name: Opening all ports for custom IP
+  ufw:
+    rule: allow
+    from_ip: "{{ item }}"
+  with_items:
+    - "{{ ri_ufw_open_ips }}"

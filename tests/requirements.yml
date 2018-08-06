@@ -1,0 +1,7 @@
+---
+
+#
+# This requirements file is used for testing the role with TravisCI.
+#
+
+- src: honzamach.accounts

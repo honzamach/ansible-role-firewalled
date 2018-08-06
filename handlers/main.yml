@@ -1,0 +1,5 @@
+---
+
+- name: Reload ufw firewall
+  ufw:
+    state: reloaded
