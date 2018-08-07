@@ -25,6 +25,7 @@ following tasks are performed automagically:
     This role optionally requires the :ref:`secure registry <section-overview-secure-registry>`
     feature.
 
+
 Requirements
 --------------------------------------------------------------------------------
 
@@ -72,7 +73,7 @@ that can be overriden and adjusted as needed:
     * *Datatype:* ``boolean``
     * *Default value:* ``false``
 
-hm_firewalled__ssh_port: 22
+.. envvar:: hm_firewalled__ssh_port
 
     Number of SSH port.
 
@@ -93,7 +94,7 @@ hm_firewalled__ssh_port: 22
     * *Datatype:* ``list of strings``
     * *Default value:* ``[]`` (empty list)
 
-hm_firewalled__allow_workstations: []
+.. envvar:: hm_firewalled__allow_workstations
 
     Open all ports for all workstations of listed users. Identifiers must point
     to valid entry in :envvar:`site_users` secret configuration structure.
@@ -101,7 +102,7 @@ hm_firewalled__allow_workstations: []
     * *Datatype:* ``list of strings``
     * *Default value:* ``[]`` (empty list)
 
-hm_firewalled__open_port_hosts: {}
+.. envvar:: hm_firewalled__open_port_hosts
 
     * *Datatype:* ``dict``
     * *Default value:* ``{}`` (empty dictionary)
@@ -115,7 +116,7 @@ hm_firewalled__open_port_hosts: {}
                 - 192.168.1.1
                 - 2001::1
 
-hm_firewalled__flush_and_reload
+.. envvar:: hm_firewalled__flush_and_reload
 
     Set this to true, when you need to completely flush and reload the whole firewall.
     Although there is no limitation in place, the recommended practice to use this
@@ -125,6 +126,13 @@ hm_firewalled__flush_and_reload
 
     * *Datatype:* ``boolean``
     * *Default value:* ``false``
+
+Additionally this role makes use of following built-in Ansible variables:
+
+.. envvar:: group_names
+
+    See section *Group memberships* below for details.
+
 
 Foreign variables
 --------------------------------------------------------------------------------
@@ -154,6 +162,15 @@ This role uses following foreign variables defined in other roles:
     Open the appropriate port for the appropriate list of monitoring nodes.
 
     * *Occurence:* **optional**
+
+
+Group memberships
+--------------------------------------------------------------------------------
+
+* **servers-logged**
+
+  In case the target server is member of this group firewall is automatically
+  opened for list of monitoring nodes.
 
 
 Usage and customization
@@ -219,6 +236,7 @@ Example content of role playbook file ``playbook.yml``::
 Example usage::
 
     ansible-playbook -i inventory playbook.yml
+    ansible-playbook -i inventory playbook.yml --extra-vars '{"hm_firewalled__flush_and_reload":true}'
 
 
 License
