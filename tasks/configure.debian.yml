@@ -49,7 +49,7 @@
     port: "{{ hm_monitored__service_port }}"
     from_ip: "{{ item }}"
   with_items: "{{ hm_monitored__allowed_hosts }}"
-  when: '"servers-feature-monitored" in group_names'
+  when: '"servers-monitored" in group_names'
 
 #-------------------------------------------------------------------------------
 
