@@ -17,7 +17,7 @@ This roles takes care of configuring and managing system UFW firewal. Additional
 following tasks are performed automagically:
 
 * Access to SSH server will be configured for all user workstations.
-* All hosts in inventory group **servers-monitored** will get the appropriate
+* All hosts in inventory group **servers_monitored** will get the appropriate
   port opened for the appropriate list of monitoring nodes.
 
 .. note::
@@ -221,12 +221,12 @@ Example Playbook
 
 Example content of inventory file ``inventory``::
 
-    [servers-firewalled]
+    [servers_firewalled]
     localhost
 
 Example content of role playbook file ``playbook.yml``::
 
-    - hosts: servers-firewalled
+    - hosts: servers_firewalled
       remote_user: root
       roles:
         - role: honzamach.firewalled

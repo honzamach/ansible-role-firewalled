@@ -5,7 +5,7 @@
 # playbook file must match the name of GitHub repository.
 #
 
-- hosts: servers-firewalled
+- hosts: servers_firewalled
   remote_user: root
   roles:
     - role: ansible-role-firewalled

@@ -11,7 +11,7 @@
 #   git clone https://github.com/honzamach/ansible-role-firewalled.git honzamach.firewalled
 #
 
-- hosts: servers-firewalled
+- hosts: servers_firewalled
   remote_user: root
   roles:
     - role: honzamach.firewalled
