@@ -16,7 +16,7 @@
 - name: Opening SSH port for general access
   ufw:
     rule: allow
-    port: "{{ hm_firewalled__ssh_port }}"
+    port: "{{ hm_firewalled__ssh_port|int }}"
     proto: tcp
   when: not hm_firewalled__ssh_restrict_to_host
 
@@ -52,7 +52,7 @@
 - name: Opening custom ports for general access
   ufw:
     rule: allow
-    port: "{{ item }}"
+    port: "{{ item|int }}"
   with_items: "{{ hm_firewalled__open_ports }}"
 
 - name: Allowing general access for custom hosts
@@ -80,7 +80,7 @@
 - include: _func.ufw_open_port.yml
   vars:
     ri_label: "custom-rule"
-    ri_ufw_open_port: "{{ outer_item.key }}"
+    ri_ufw_open_port: "{{ outer_item.key|int }}"
     ri_ufw_open_ips: "{{ outer_item.value }}"
   with_dict: "{{ hm_firewalled__open_port_hosts }}"
   loop_control:
