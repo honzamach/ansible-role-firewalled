@@ -1,5 +1,7 @@
 ---
 
+- import_tasks: check.yml
+
 - block:
 
     - import_tasks: install.debian.yml

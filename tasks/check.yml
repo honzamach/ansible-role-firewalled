@@ -1,0 +1,34 @@
+---
+
+- name: "ASSERTION: primary admin will be able to access the host"
+  assert:
+    that:
+      - 'primary_admin is defined'
+      - 'primary_admin in site_users'
+      - '"workstations" in site_users[primary_admin] and site_users[primary_admin].workstations|length > 0'
+    msg: "Primary admin must have defined list of workstation addresses"
+  when: hm_firewalled__ssh_restrict_to_host
+  tags:
+    - check
+
+- name: "ASSERTION: admins will be able to access the host"
+  assert:
+    that:
+      - 'item in site_users'
+      - '"workstations" in site_users[item] and site_users[item].workstations|length > 0'
+    msg: "Each admin must have defined list of workstation addresses"
+  with_list: "{{ hm_accounts__admins }}"
+  when: hm_firewalled__ssh_restrict_to_host
+  tags:
+    - check
+
+- name: "ASSERTION: regular users will be able to access the host"
+  assert:
+    that:
+      - 'item.key in site_users'
+      - '"workstations" in site_users[item.key] and site_users[item.key].workstations|length > 0'
+    msg: "Each user must have defined list of workstation addresses"
+  with_dict: "{{ hm_accounts__users }}"
+  when: hm_firewalled__ssh_restrict_to_host
+  tags:
+    - check
