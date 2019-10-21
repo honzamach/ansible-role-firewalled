@@ -33,7 +33,7 @@
       with_dict: "{{ site_users }}"
       loop_control:
         loop_var: outer_item
-      when: outer_item.key in hm_accounts__admins or outer_item.key in hm_accounts__users
+      when: outer_item.key == primary_admin or outer_item.key in hm_accounts__admins or outer_item.key in hm_accounts__users
 
   when: hm_firewalled__ssh_restrict_to_host
 
