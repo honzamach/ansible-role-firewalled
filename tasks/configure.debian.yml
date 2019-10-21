@@ -1,9 +1,5 @@
 ---
 
-- name: Including secret configurations, if necessary
-  include_vars: "vault/secrets.yml"
-  when: hm_firewalled__ssh_restrict_to_host or hm_firewalled__allow_workstations
-
 - block:
 
     - name: Resetting firewall to installation defaults
