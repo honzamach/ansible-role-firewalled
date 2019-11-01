@@ -145,7 +145,7 @@ This role uses following foreign variables defined in other roles:
 
     * *Occurence:* **optional**
 
-:envvar:`rb_accounts__users`
+:envvar:`hm_accounts__users`
 
     Open the SSH port for the appropriate list of user workstations.
 
