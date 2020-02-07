@@ -1,40 +1,20 @@
 ---
 
-#
-# Restrict SSH to listed hosts instead of unrestricted access.
-#
+hm_firewalled__install_packages:
+  debian:
+    apt:
+      - ufw
+
 hm_firewalled__ssh_restrict_to_host: false
 
-#
-# Number of SSH port.
-#
 hm_firewalled__ssh_port: 22
 
-#
-# Open custom ports to the whole world.
-#
 hm_firewalled__open_ports: []
 
-#
-# Open all ports for listed hosts.
-#
 hm_firewalled__allow_hosts: []
 
-#
-# Open all ports for workstations of listed users.
-#
 hm_firewalled__allow_workstations: []
 
-#
-# Open given ports for listed hosts.
-#
 hm_firewalled__open_port_hosts: {}
 
-#
-# Set this to true, when you need to completely flush and reload the whole firewall.
-# Although there is no limitation in place, the recommended practice to use this
-# feature is to give it only when really necesary via command line arguments:
-#
-#   ansible-playbook ... --extra-vars '{"hm_firewalled__flush_and_reload":true}'
-#
 hm_firewalled__flush_and_reload: false

@@ -1,6 +1,6 @@
 ---
 
-- name: Installing essential packages
+- name: Installing necessary system packages
   apt:
-    name: ufw
+    name: "{{ hm_firewalled__install_packages[ansible_os_family|lower]['apt'] }}"
     state: latest
