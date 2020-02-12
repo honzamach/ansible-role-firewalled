@@ -7,92 +7,108 @@
         state: reset
         policy: allow
 
-    - name: Disabling firewall
+    - name: Disabling firewall before reload
       ufw:
         state: disabled
 
   when: hm_firewalled__flush_and_reload
 
-- name: Opening SSH port for general access
-  ufw:
-    rule: allow
-    port: "{{ hm_firewalled__ssh_port|int }}"
-    proto: tcp
-  when: not hm_firewalled__ssh_restrict_to_host
+#-------------------------------------------------------------------------------
 
 - block:
 
-    #
-    # Make sure all users are stil able to access the server.
-    #
-    - include: _func.ufw_open_port.yml
-      vars:
-        ri_label: "SSH access for user {{ outer_item.key }}"
-        ri_ufw_open_port: "{{ hm_firewalled__ssh_port }}"
-        ri_ufw_open_ips: "{{ outer_item.value.workstations }}"
-      with_dict: "{{ site_users }}"
-      loop_control:
-        loop_var: outer_item
-      when: outer_item.key == primary_admin or outer_item.key in hm_accounts__admins or outer_item.key in hm_accounts__users
+    - name: Disabling firewall
+      ufw:
+        state: disabled
 
-  when: hm_firewalled__ssh_restrict_to_host
+  when: not hm_firewalled__enabled
 
 #-------------------------------------------------------------------------------
 
-- name: Enabling remote monitoring for appropriate hosts
-  ufw:
-    rule: allow
-    port: "{{ hm_monitored__service_port }}"
-    from_ip: "{{ item }}"
-  with_items: "{{ hm_monitored__allowed_hosts }}"
-  when: '"servers_monitored" in group_names'
+- block:
 
-#-------------------------------------------------------------------------------
+  - name: Opening SSH port for general access
+    ufw:
+      rule: allow
+      port: "{{ hm_firewalled__ssh_port|int }}"
+      proto: tcp
+    when: not hm_firewalled__ssh_restrict_to_host
 
-- name: Opening custom ports for general access
-  ufw:
-    rule: allow
-    port: "{{ item|int }}"
-  with_items: "{{ hm_firewalled__open_ports }}"
+  - block:
 
-- name: Allowing general access for custom hosts
-  ufw:
-    rule: allow
-    from_ip: "{{ item }}"
-  with_items: "{{ hm_firewalled__allow_hosts }}"
+      #
+      # Make sure all admins or users are still able to access the server.
+      #
+      - include: _func.ufw_open_port.yml
+        vars:
+          ri_label: "SSH access for user {{ outer_item.key }}"
+          ri_ufw_open_port: "{{ hm_firewalled__ssh_port }}"
+          ri_ufw_open_ips: "{{ outer_item.value.workstations }}"
+        with_dict: "{{ site_users }}"
+        loop_control:
+          loop_var: outer_item
+        when: outer_item.key == primary_admin or outer_item.key in hm_accounts__admins or outer_item.key in hm_accounts__users
 
-#-------------------------------------------------------------------------------
+    when: hm_firewalled__ssh_restrict_to_host
 
-# Opening all ports for listed user workstations
+  # ---
 
-- include: _func.ufw_open_all.yml
-  vars:
-    ri_label: "FULL access for user {{ outer_item }}"
-    ri_ufw_open_ips: "{{ site_users[outer_item]['workstations'] }}"
-  with_list: "{{ hm_firewalled__allow_workstations }}"
-  loop_control:
-    loop_var: outer_item
+  - name: Enabling remote monitoring for appropriate hosts
+    ufw:
+      rule: allow
+      port: "{{ hm_monitored__service_port|int }}"
+      from_ip: "{{ item }}"
+    with_items: "{{ hm_monitored__allowed_hosts }}"
+    when: '"servers_monitored" in group_names'
 
-#-------------------------------------------------------------------------------
+  # ---
 
-# Opening listed ports for listed hosts
+  - name: Opening custom ports for general access
+    ufw:
+      rule: allow
+      port: "{{ item|int }}"
+    with_items: "{{ hm_firewalled__open_ports }}"
 
-- include: _func.ufw_open_port.yml
-  vars:
-    ri_label: "custom-rule"
-    ri_ufw_open_port: "{{ outer_item.key|int }}"
-    ri_ufw_open_ips: "{{ outer_item.value }}"
-  with_dict: "{{ hm_firewalled__open_port_hosts }}"
-  loop_control:
-    loop_var: outer_item
+  - name: Allowing general access for custom hosts
+    ufw:
+      rule: allow
+      from_ip: "{{ item }}"
+    with_items: "{{ hm_firewalled__allow_hosts }}"
 
-#-------------------------------------------------------------------------------
+  # ---
 
-- name: Enabling logging
-  ufw:
-    logging: on
+  # Opening all ports for listed user workstations
 
-- name: Enabling firewall
-  ufw:
-    state: enabled
-    policy: deny
+  - include: _func.ufw_open_all.yml
+    vars:
+      ri_label: "FULL access for user {{ outer_item }}"
+      ri_ufw_open_ips: "{{ site_users[outer_item]['workstations'] }}"
+    with_list: "{{ hm_firewalled__allow_workstations }}"
+    loop_control:
+      loop_var: outer_item
+
+  # ---
+
+  # Opening listed ports for listed hosts
+
+  - include: _func.ufw_open_port.yml
+    vars:
+      ri_label: "custom-rule"
+      ri_ufw_open_port: "{{ outer_item.key|int }}"
+      ri_ufw_open_ips: "{{ outer_item.value }}"
+    with_dict: "{{ hm_firewalled__open_port_hosts }}"
+    loop_control:
+      loop_var: outer_item
+
+  # ---
+
+  - name: Enabling logging
+    ufw:
+      logging: "on"
+
+  - name: Enabling firewall
+    ufw:
+      state: enabled
+      policy: deny
+
+  when: hm_firewalled__enabled

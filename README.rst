@@ -85,6 +85,9 @@ Example usage::
     # Run everything:
     ansible-playbook --ask-vault-pass --inventory inventory role_playbook.yml
 
+    # Disable firewall, but keep existing rules:
+    ansible-playbook --ask-vault-pass --inventory inventory role_playbook.yml --extra-vars '{"hm_firewalled__enabled":false}'
+
     # Flush and reload firewall rules:
     ansible-playbook --ask-vault-pass --inventory inventory role_playbook.yml --extra-vars '{"hm_firewalled__flush_and_reload":true}'
 
@@ -134,6 +137,13 @@ Internal role variables
             apt:
               - ufw
               - ...
+
+.. envvar:: hm_firewalled__enabled
+
+    Enable/disable firewall completely for particular host.
+
+    * *Datatype:* ``boolean``
+    * *Default:* ``true``
 
 .. envvar:: hm_firewalled__ssh_restrict_to_host
 

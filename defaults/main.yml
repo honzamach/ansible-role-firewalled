@@ -5,6 +5,8 @@ hm_firewalled__install_packages:
     apt:
       - ufw
 
+hm_firewalled__enabled: true
+
 hm_firewalled__ssh_restrict_to_host: false
 
 hm_firewalled__ssh_port: 22
