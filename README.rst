@@ -56,7 +56,13 @@ Dependencies
 This role dependent on following roles:
 
 * :ref:`accounts <section-role-accounts>` *[SOFT]*
+
+  All user workstations will be automatically enabled access to SSH port.
+
 * :ref:`monitored <section-role-monitored>` *[SOFT]*
+
+  In case server is monitored firewall will be automatically opened for the list of
+  monitoring nodes.
 
 No other roles have dependency on this role.
 
@@ -109,6 +115,19 @@ It is recommended to follow these configuration principles:
         hm_firewalled__open_port_hosts:
           5432:
             - 192.168.1.1
+
+        # Open all ports for listed hosts
+        hm_firewalled__allow_hosts:
+          - 192.168.1.1
+          - ...
+
+        # Open all ports for all workstations of listed users. For this to work
+        # your ``site_users`` registry must contain appropriate user records with
+        # ``workstations`` subkey filled in.
+        hm_firewalled__allow_workstations:
+          - user1
+          - user2
+
 
 
 .. _section-role-firewalled-variables:
@@ -262,17 +281,7 @@ Group memberships
 Managed files
 --------------------------------------------------------------------------------
 
-.. note::
-
-    This role supports the :ref:`template customization <section-overview-role-customize-templates>` feature.
-
-This role manages content of following files on target system:
-
-* ``/etc/syslog-ng/syslog-ng.conf`` *[TEMPLATE]*
-* ``/etc/logrotate.d/apt`` *[TEMPLATE]*
-* ``/etc/logrotate.d/aptitude`` *[TEMPLATE]*
-* ``/etc/logrotate.d/dpkg`` *[TEMPLATE]*
-* ``/etc/logrotate.d/syslog-ng`` *[TEMPLATE]*
+This role does not manage content of any files on target system.
 
 
 .. _section-role-firewalled-author:
